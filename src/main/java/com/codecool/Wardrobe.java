@@ -5,15 +5,15 @@ import java.util.List;
 
 public class Wardrobe {
     private List<Hanger> hangers;
-    private int size;
+    private int maxSize;
 
-    public Wardrobe(int size) {
-        hangers = new ArrayList<Hanger>();
-        this.size = size;
+    public Wardrobe(int maxSize) {
+        this.hangers = new ArrayList<Hanger>();
+        this.maxSize = maxSize;
     }
 
     public void addHanger(Hanger hanger) {
-        if (hangers.size() < size) {
+        if (hangers.size() < maxSize) {
             hangers.add(hanger);
         }
     }

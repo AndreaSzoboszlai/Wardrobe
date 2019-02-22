@@ -14,6 +14,6 @@ public class BottomCloth extends Cloth {
 
     @Override
     public String toString() {
-        return "Type" + bottomtype + ", Brand:  " + getBrand();
+        return "Type" + bottomtype + ", Brand:  " + getBrand() + ", On hanger: " + onHanger();
     }
 }

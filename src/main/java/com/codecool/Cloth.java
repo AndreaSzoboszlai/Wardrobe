@@ -17,6 +17,8 @@ public abstract class Cloth {
         onHanger = true;
     }
 
+    public void removeFromHanger() {onHanger = false;}
+
     public boolean onHanger() {
         return onHanger;
     }

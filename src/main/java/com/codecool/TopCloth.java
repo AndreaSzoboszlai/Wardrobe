@@ -13,6 +13,6 @@ public class TopCloth extends Cloth {
     }
 
     public String toString() {
-        return "Type: " + topType + ", Brand:  " + getBrand();
+        return "Type: " + topType + ", Brand:  " + getBrand() + ", On hanger: " + onHanger();
     }
 }
