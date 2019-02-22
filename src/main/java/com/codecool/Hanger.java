@@ -1,5 +1,6 @@
 package com.codecool;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,26 +18,28 @@ public class Hanger {
     }
 
     public void addSingleCloth(Cloth cloth) throws HangerIsFull {
-        if (hangerType == HangerType.SINGLE) {
+        if (hangerType == HangerType.SINGLE && (cloth instanceof TopCloth)) {
             if (cloths.size() < 1) {
                 cloths.add(cloth);
+                cloth.putOnHanger();
             } else {
                 throw new HangerIsFull();
             }
+        } else if (hangerType == HangerType.SINGLE && (cloth instanceof BottomCloth)) {
+            System.out.println("Can't put a bottom cloth on a single hanger.");
         } else if (hangerType == HangerType.DOUBLE) {
-            if (haveClothOnIt == true) {
-                if (cloth instanceof BottomCloth && (cloths.get(0) instanceof TopCloth)) {
-                    cloths.add(cloth);
-                    cloth.onHanger();
-                } else if (cloth instanceof TopCloth && (cloths.get(0) instanceof BottomCloth)) {
-                    cloths.add(cloth);
-                    cloth.onHanger();
-                }
-                if (cloths.size() == 2) {
-                    throw new HangerIsFull();
-                }
-            } else {
+            if (cloths.size() == 0) {
                 cloths.add(cloth);
+                cloth.putOnHanger();
+            }
+            else if (cloth instanceof BottomCloth && (cloths.get(0) instanceof TopCloth) && cloths.size() == 1) {
+                cloths.add(cloth);
+                cloth.putOnHanger();
+            } else if (cloth instanceof TopCloth && (cloths.get(0) instanceof BottomCloth) && cloths.size() == 1) {
+                cloths.add(cloth);
+                cloth.putOnHanger();
+            } else {
+                throw new HangerIsFull();
             }
         }
     }

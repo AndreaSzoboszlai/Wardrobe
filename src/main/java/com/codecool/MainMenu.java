@@ -1,7 +1,7 @@
 package com.codecool;
 
-import java.sql.SQLOutput;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class MainMenu {
@@ -53,7 +53,38 @@ public class MainMenu {
     }
 
     public void clothMenu() {
-        String[] options = {"List all clothes", "Add clothes to wardrobe", "Create cloth", "Find Clothing by name", "Exit"};
+        String[] options = {"List all clothes", "Add clothes to wardrobe", "Create cloth", "Find Clothing by name", "Back to main menu"};
+        while (true) {
+            show(options);
+            String chosen = reader.nextLine();
+            switch (chosen) {
+                case "1":
+                    listCreatedClothes();
+                    break;
+                case "2":
+                    putClothesToWardrobe();
+                    break;
+                case "3":
+                    wardrobe.createdList(createCloth());
+                    break;
+                case "4":
+                    System.out.println("Find cloth by name:");
+                    String name = reader.nextLine();
+                    try {
+                        System.out.println(findClothing(name).toString());
+                    } catch (NoSuchCloth ex) {
+                        System.out.println(ex.getMessage());
+                    }
+
+                case "0":
+                    start();
+                    break;
+            }
+        }
+    }
+
+    public void hangerMenu() {
+        String[] options = {"List all hangers (with the clothes on them)", "Add hanger", "Remove clothing from hanger", "Remove all cloth from hanger", "Add clothing to hanger", "Back to main menu"};
         while (true) {
             show(options);
             String chosen = reader.nextLine();
@@ -62,22 +93,72 @@ public class MainMenu {
                     listAllClothes();
                     break;
                 case "2":
-                    putClothesToWardrobe();
+                    addHanger();
                     break;
                 case "3":
-                    createCloth();
+                    removeClothingFromHanger();
                     break;
                 case "4":
-                    System.out.println("Find cloth by name:");
-                    String name = reader.nextLine();
-                    try {
-                        System.out.println(findClothe(name).toString());
-                    } catch (NoSuchCloth ex) {
-                        System.out.println(ex.getMessage());
-                    }
-
+                    removeAllClothingFromHanger();
+                    break;
+                case "5":
+                    addClothingToHanger();
+                    break;
                 case "0":
                     start();
+                    break;
+            }
+        }
+    }
+
+    private void addClothingToHanger() {
+        System.out.println("Clothing's brand name: ");
+        try {
+            Cloth cloth = findClothing(reader.nextLine());
+            System.out.println("Hanger's idendifier: ");
+            Hanger hanger = findHangerByName(reader.nextLine());
+            hanger.addSingleCloth(cloth);
+        } catch (NoSuchCloth | HangerIsFull | NoSuchHanger ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void removeClothingFromHanger() {
+        System.out.println("Clothing's brand name: ");
+        try {
+            Cloth cloth = findClothing(reader.nextLine());
+            Hanger hanger = findHanger(cloth);
+            hanger.removeSingleCloth(cloth);
+            cloth.removeFromHanger();
+        } catch (NoSuchCloth | NotOnHangerException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    private void removeAllClothingFromHanger() {
+        System.out.println("Hanger's identifier: ");
+        try {
+            Hanger hanger = findHangerByName(reader.nextLine());
+            List<Cloth> clothes = hanger.getCloths();
+            for (Cloth cloth : clothes) {
+                cloth.removeFromHanger();
+            }
+            hanger.removeAllClothes();
+        } catch (NoSuchHanger ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    public void wardrobeMenu() {
+        String[] options = {"List contents", "Back to main menu"};
+        while (true) {
+            show(options);
+            String chosen = reader.nextLine();
+            switch (chosen) {
+                case "1":
+                    listAllClothes();
+                    break;
+                case "0": start();
                     break;
             }
         }
@@ -93,7 +174,27 @@ public class MainMenu {
         }
     }
 
-    public Cloth findClothe(String name) throws NoSuchCloth {
+    public void listCreatedClothes() {
+        for (Cloth element : wardrobe.getCreatedClothes()) {
+            System.out.println(element.toString());
+        }
+    }
+
+    public Cloth findClothing(String name) throws NoSuchCloth {
+        Cloth cloth = null;
+        for (Cloth element : wardrobe.getCreatedClothes()) {
+            if (element.getBrand().equals(name)) {
+                cloth = element;
+            }
+        }
+        if (cloth == null) {
+            throw new NoSuchCloth("No cloth that is called like: " + name);
+        }
+        return cloth;
+    }
+    /*
+
+    public Cloth findClothing(String name) throws NoSuchCloth {
         Cloth cloth = null;
         for (Hanger element : wardrobe.getHangers()) {
             for (Cloth element2 : element.getCloths()) {
@@ -106,11 +207,11 @@ public class MainMenu {
             throw new NoSuchCloth("No cloth that is called like: " + name);
         }
         return cloth;
-    }
+    }  */
 
     private Cloth createCloth() {
         System.out.println("Choose a type: ");
-        System.out.println("1. Bottom cloth,\n 2. Top cloth,\n 0. Back to main menu. ");
+        System.out.println(" 1. Top cloth,\n 2. Bottom cloth,\n 0. Back to main menu. ");
         Cloth newCloth = null;
         while (true) {
             String chosen = reader.nextLine();
@@ -158,9 +259,9 @@ public class MainMenu {
                 count++;
             }
             while (true) {
-                String chosenType = reader.nextLine();
+                BottomType chosenType = BottomType.valueOf(reader.nextLine());
                 if (Arrays.asList(bottomEnum).contains(chosenType)) {
-                    bottomType = BottomType.valueOf(chosenType);
+                    bottomType = chosenType;
                     break;
                 }
             }
@@ -177,16 +278,18 @@ public class MainMenu {
         System.out.println("Clothing's brand: ");
         String brand = reader.nextLine();
         try {
-            cloth = findClothe(brand);
+            cloth = findClothing(brand);
             if (cloth.onHanger() == true) {
                 wardrobe.addHanger(findHanger(cloth));
+            } else {
+                System.out.println("Cloth is not on hanger yet");
             }
-        } catch (NoSuchCloth ex) {
+        } catch (NoSuchCloth | NotOnHangerException ex) {
             System.out.println(ex.getMessage());
         }
     }
 
-    public Hanger findHanger(Cloth cloth) {
+    public Hanger findHanger(Cloth cloth) throws NotOnHangerException {
         Hanger hanger = null;
         for (Hanger element : wardrobe.getHangers()) {
             for (Cloth element2 : element.getCloths()) {
@@ -196,13 +299,13 @@ public class MainMenu {
             }
         }
         if (hanger == null) {
-            System.out.println("Clothing is not on a hanger.");
+            throw new NotOnHangerException();
         }
         return hanger;
     }
 
 
-    public Hanger findHanger(String hanger) throws NoSuchHanger {
+    public Hanger findHangerByName(String hanger) throws NoSuchHanger {
         Hanger hanger1 = null;
         for (Hanger element : wardrobe.getHangers()) {
             if (element.getName().equals(hanger)) {
@@ -215,27 +318,9 @@ public class MainMenu {
         return hanger1;
     }
 
-    public void hangerMenu() {
-        String[] options = {"List all hangers (with the clothes on them)", "Add hanger", "Exit"};
-        while (true) {
-            show(options);
-            String chosen = reader.nextLine();
-            switch (chosen) {
-                case "1":
-                    listAllClothes();
-                    break;
-                case "2":
-                    addHanger();
-                    break;
 
-                case "0":
-                    break;
-            }
-        }
-    }
-
-    public Hanger addHanger() {
-        System.out.println("Hanger's name:");
+    public void addHanger() {
+        System.out.println("Hanger's identifier:");
         String name = reader.nextLine();
         Hanger hanger = null;
         System.out.println("Hanger's type: \n 1. Single \n 2. Double");
@@ -243,30 +328,16 @@ public class MainMenu {
             String chosen = reader.nextLine();
             if (chosen.equals("1")) {
                 hanger = new Hanger(name, HangerType.SINGLE);
+                wardrobe.addHanger(hanger);
                 break;
             } else if (chosen.equals("2")) {
                 hanger = new Hanger(name, HangerType.DOUBLE);
+                wardrobe.addHanger(hanger);
                 break;
             }
         }
-        return hanger;
+
     }
 
-    public void wardrobeMenu() {
-        String[] options = {"List contents", "Puth clothing to wardrobe", "Exit"};
-        while (true) {
-            show(options);
-            String chosen = reader.nextLine();
-            switch (chosen) {
-                case "1":
-                    listAllClothes();
-                    break;
-                case "2":
-                    putClothesToWardrobe();
-                    break;
-                case "0":
-                    break;
-            }
-        }
-    }
+
 }

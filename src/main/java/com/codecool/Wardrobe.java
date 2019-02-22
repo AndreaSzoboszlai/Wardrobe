@@ -6,10 +6,12 @@ import java.util.List;
 public class Wardrobe {
     private List<Hanger> hangers;
     private int maxSize;
+    private List<Cloth> createdClothes;
 
     public Wardrobe(int maxSize) {
-        this.hangers = new ArrayList<Hanger>();
+        this.hangers = new ArrayList<>();
         this.maxSize = maxSize;
+        this.createdClothes = new ArrayList<>();
     }
 
     public void addHanger(Hanger hanger) {
@@ -18,7 +20,15 @@ public class Wardrobe {
         }
     }
 
+    public void createdList(Cloth cloth) {
+        createdClothes.add(cloth);
+    }
+
     public List<Hanger> getHangers() {
         return hangers;
+    }
+
+    public List<Cloth> getCreatedClothes() {
+        return createdClothes;
     }
 }
