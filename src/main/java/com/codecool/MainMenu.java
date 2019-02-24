@@ -72,7 +72,7 @@ public class MainMenu {
                     String name = reader.nextLine();
                     try {
                         System.out.println(findClothing(name).toString());
-                    } catch (NoSuchCloth ex) {
+                    } catch (NoSuchClothException ex) {
                         System.out.println(ex.getMessage());
                     }
 
@@ -118,7 +118,7 @@ public class MainMenu {
             System.out.println("Hanger's idendifier: ");
             Hanger hanger = wardrobe.findHangerByName(reader.nextLine());
             hanger.addSingleCloth(cloth);
-        } catch (NoSuchCloth | HangerIsFull | NoSuchHanger ex) {
+        } catch (NoSuchClothException | HangerIsFullException | NoSuchHangerException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -130,7 +130,7 @@ public class MainMenu {
             Hanger hanger = wardrobe.findHanger(cloth);
             hanger.removeSingleCloth(cloth);
             cloth.removeFromHanger();
-        } catch (NoSuchCloth | NotOnHangerException ex) {
+        } catch (NoSuchClothException | NotOnHangerException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -144,7 +144,7 @@ public class MainMenu {
                 cloth.removeFromHanger();
             }
             hanger.removeAllClothes();
-        } catch (NoSuchHanger ex) {
+        } catch (NoSuchHangerException ex) {
             System.out.println(ex.getMessage());
         }
     }
@@ -180,7 +180,7 @@ public class MainMenu {
         }
     }
 
-    public Cloth findClothing(String name) throws NoSuchCloth {
+    public Cloth findClothing(String name) throws NoSuchClothException {
         Cloth cloth = null;
         for (Cloth element : wardrobe.getCreatedClothes()) {
             if (element.getBrand().equals(name)) {
@@ -188,7 +188,7 @@ public class MainMenu {
             }
         }
         if (cloth == null) {
-            throw new NoSuchCloth("No cloth that is called like: " + name);
+            throw new NoSuchClothException("No cloth that is called like: " + name);
         }
         return cloth;
     }
@@ -243,10 +243,15 @@ public class MainMenu {
                 count++;
             }
             while (true) {
-                TopType chosenType = TopType.valueOf(reader.nextLine());
-                if (Arrays.asList(topEnum).contains(chosenType)) {
-                    topType = chosenType;
-                    break;
+                String tType = reader.nextLine();
+                try {
+                    TopType chosenType = TopType.valueOf(tType);
+                    if (Arrays.asList(topEnum).contains(chosenType)) {
+                        topType = chosenType;
+                        break;
+                    }
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("Couldn't find a type with a name like: " + tType );
                 }
             }
             cloth = new TopCloth(brand, topType);
@@ -259,10 +264,15 @@ public class MainMenu {
                 count++;
             }
             while (true) {
-                BottomType chosenType = BottomType.valueOf(reader.nextLine());
-                if (Arrays.asList(bottomEnum).contains(chosenType)) {
-                    bottomType = chosenType;
-                    break;
+                String bType = reader.nextLine();
+                try {
+                    BottomType chosenType = BottomType.valueOf(bType);
+                    if (Arrays.asList(bottomEnum).contains(chosenType)) {
+                        bottomType = chosenType;
+                        break;
+                    }
+                } catch (IllegalArgumentException ex) {
+                    System.out.println("Couldn't find a type with a name like: " + bType );
                 }
             }
             cloth = new BottomCloth(brand, bottomType);
@@ -284,7 +294,7 @@ public class MainMenu {
             } else {
                 System.out.println("Cloth is not on hanger yet");
             }
-        } catch (NoSuchCloth | NotOnHangerException ex) {
+        } catch (NoSuchClothException | NotOnHangerException ex) {
             System.out.println(ex.getMessage());
         }
     }

@@ -1,8 +1,8 @@
 package com.codecool;
 
-public class HangerIsFull extends Exception {
+public class HangerIsFullException extends Exception {
 
-    public HangerIsFull() {
+    public HangerIsFullException() {
         super("The Hanger is already full");
     }
 }

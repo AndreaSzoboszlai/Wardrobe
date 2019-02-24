@@ -1,6 +1,5 @@
 package com.codecool;
 
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +16,13 @@ public class Hanger {
         this.cloths = new ArrayList<Cloth>();
     }
 
-    public void addSingleCloth(Cloth cloth) throws HangerIsFull {
+    public void addSingleCloth(Cloth cloth) throws HangerIsFullException {
         if (hangerType == HangerType.SINGLE && (cloth instanceof TopCloth)) {
             if (cloths.size() < 1) {
                 cloths.add(cloth);
                 cloth.putOnHanger();
             } else {
-                throw new HangerIsFull();
+                throw new HangerIsFullException();
             }
         } else if (hangerType == HangerType.SINGLE && (cloth instanceof BottomCloth)) {
             System.out.println("Can't put a bottom cloth on a single hanger.");
@@ -39,7 +38,7 @@ public class Hanger {
                 cloths.add(cloth);
                 cloth.putOnHanger();
             } else {
-                throw new HangerIsFull();
+                throw new HangerIsFullException();
             }
         }
     }

@@ -1,8 +1,8 @@
 package com.codecool;
 
-public class NoSuchCloth extends Exception {
+public class NoSuchClothException extends Exception {
 
-    public NoSuchCloth(String message) {
+    public NoSuchClothException(String message) {
         super(message);
     }
 }

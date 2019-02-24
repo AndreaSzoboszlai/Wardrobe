@@ -47,7 +47,7 @@ public class Wardrobe {
         return hanger;
     }
 
-    public Hanger findHangerByName(String hanger) throws NoSuchHanger {
+    public Hanger findHangerByName(String hanger) throws NoSuchHangerException {
         Hanger hanger1 = null;
         for (Hanger element : hangers) {
             if (element.getName().equals(hanger)) {
@@ -55,7 +55,7 @@ public class Wardrobe {
             }
         }
         if (hanger1 == null) {
-            throw new NoSuchHanger();
+            throw new NoSuchHangerException();
         }
         return hanger1;
     }

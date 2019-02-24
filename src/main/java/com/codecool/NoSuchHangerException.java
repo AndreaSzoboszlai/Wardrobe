@@ -1,7 +1,7 @@
 package com.codecool;
 
-public class NoSuchHanger extends Exception {
-    public NoSuchHanger() {
+public class NoSuchHangerException extends Exception {
+    public NoSuchHangerException() {
         super("There is no hanger with an identifier like that.");
     }
 }
