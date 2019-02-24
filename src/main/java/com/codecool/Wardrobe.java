@@ -31,4 +31,17 @@ public class Wardrobe {
     public List<Cloth> getCreatedClothes() {
         return createdClothes;
     }
+
+    public Hanger findHangerByName(String hanger) throws NoSuchHanger {
+        Hanger hanger1 = null;
+        for (Hanger element : getHangers()) {
+            if (element.getName().equals(hanger)) {
+                hanger1 = element;
+            }
+        }
+        if (hanger1 == null) {
+            throw new NoSuchHanger();
+        }
+        return hanger1;
+    }
 }

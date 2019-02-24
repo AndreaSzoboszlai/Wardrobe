@@ -116,7 +116,7 @@ public class MainMenu {
         try {
             Cloth cloth = findClothing(reader.nextLine());
             System.out.println("Hanger's idendifier: ");
-            Hanger hanger = findHangerByName(reader.nextLine());
+            Hanger hanger = wardrobe.findHangerByName(reader.nextLine());
             hanger.addSingleCloth(cloth);
         } catch (NoSuchCloth | HangerIsFull | NoSuchHanger ex) {
             System.out.println(ex.getMessage());
@@ -138,7 +138,7 @@ public class MainMenu {
     private void removeAllClothingFromHanger() {
         System.out.println("Hanger's identifier: ");
         try {
-            Hanger hanger = findHangerByName(reader.nextLine());
+            Hanger hanger = wardrobe.findHangerByName(reader.nextLine());
             List<Cloth> clothes = hanger.getCloths();
             for (Cloth cloth : clothes) {
                 cloth.removeFromHanger();
@@ -302,20 +302,6 @@ public class MainMenu {
             throw new NotOnHangerException();
         }
         return hanger;
-    }
-
-
-    public Hanger findHangerByName(String hanger) throws NoSuchHanger {
-        Hanger hanger1 = null;
-        for (Hanger element : wardrobe.getHangers()) {
-            if (element.getName().equals(hanger)) {
-                hanger1 = element;
-            }
-        }
-        if (hanger1 == null) {
-            throw new NoSuchHanger();
-        }
-        return hanger1;
     }
 
 
