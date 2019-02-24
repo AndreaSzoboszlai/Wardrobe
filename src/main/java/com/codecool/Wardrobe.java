@@ -32,9 +32,24 @@ public class Wardrobe {
         return createdClothes;
     }
 
+    public Hanger findHanger(Cloth cloth) throws NotOnHangerException {
+        Hanger hanger = null;
+        for (Hanger element : hangers) {
+            for (Cloth element2 : element.getCloths()) {
+                if (element2.getBrand().equals(cloth.getBrand())) {
+                    hanger = element;
+                }
+            }
+        }
+        if (hanger == null) {
+            throw new NotOnHangerException();
+        }
+        return hanger;
+    }
+
     public Hanger findHangerByName(String hanger) throws NoSuchHanger {
         Hanger hanger1 = null;
-        for (Hanger element : getHangers()) {
+        for (Hanger element : hangers) {
             if (element.getName().equals(hanger)) {
                 hanger1 = element;
             }

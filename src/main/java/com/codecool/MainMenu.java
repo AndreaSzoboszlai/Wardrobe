@@ -127,7 +127,7 @@ public class MainMenu {
         System.out.println("Clothing's brand name: ");
         try {
             Cloth cloth = findClothing(reader.nextLine());
-            Hanger hanger = findHanger(cloth);
+            Hanger hanger = wardrobe.findHanger(cloth);
             hanger.removeSingleCloth(cloth);
             cloth.removeFromHanger();
         } catch (NoSuchCloth | NotOnHangerException ex) {
@@ -280,7 +280,7 @@ public class MainMenu {
         try {
             cloth = findClothing(brand);
             if (cloth.onHanger() == true) {
-                wardrobe.addHanger(findHanger(cloth));
+                wardrobe.addHanger(wardrobe.findHanger(cloth));
             } else {
                 System.out.println("Cloth is not on hanger yet");
             }
@@ -288,22 +288,6 @@ public class MainMenu {
             System.out.println(ex.getMessage());
         }
     }
-
-    public Hanger findHanger(Cloth cloth) throws NotOnHangerException {
-        Hanger hanger = null;
-        for (Hanger element : wardrobe.getHangers()) {
-            for (Cloth element2 : element.getCloths()) {
-                if (element2.getBrand().equals(cloth.getBrand())) {
-                    hanger = element;
-                }
-            }
-        }
-        if (hanger == null) {
-            throw new NotOnHangerException();
-        }
-        return hanger;
-    }
-
 
     public void addHanger() {
         System.out.println("Hanger's identifier:");
